@@ -1,0 +1,6 @@
+{
+  "influxclouddb": {
+    "description": "<a target=\"_blank\" href=\"https://cloud2.influxdata.com\">https://cloud2.influxdata.com</a><br/><a target=\"_blank\" href=\"http://localhost:8086\">http://localhost:8086</a>",
+    "require_description": "Mandatory fields: 'token', 'url', 'bucket', 'org',. <ul><li><a target=\"_blank\" href=\"https://cloud2.influxdata.com\">Register at https://cloud2.influxdata.com</a></li><li><a target=\"_blank\" href=\"https://docs.influxdata.com/influxdb/cloud/organizations/view-orgs/#view-your-organization-id\">Get organization doc.</a></li><li><a target=\"_blank\" href=\"https://docs.influxdata.com/influxdb/cloud/security/tokens/create-token/\">Generate token doc.</a></li><li><a target=\"_blank\" href=\"https://docs.influxdata.com/influxdb/v2.0/organizations/buckets/create-bucket\">Create bucket doc.</a></li></ul>"
+  }
+}

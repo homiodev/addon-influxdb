@@ -1,0 +1,26 @@
+{
+  "workspace": {
+    "influxdb": "InfluxDb"
+  },
+  "TITLE": {
+    "INSTALL_INFLUXDB": "Install influxDb"
+  },
+  "selection": {
+    "InfluxCloudDBEntity": "Influx CloudDB"
+  },
+  "influxdb": {
+    "name": "InfluxDB",
+    "setting": {
+      "label": "InfluxDB settings",
+      "st_InfluxDBPathSetting": "InfluxDB install path",
+      "st_InfluxDBInstallSetting": "Install InfluxDB",
+      "st_InfluxDBRunAtStartupSetting": "Run at startup",
+      "st_InfluxDBConfigureButtonSetting": "Configure db"
+    }
+  },
+  "field": {
+    "influxBucket": "InfluxDB Bucket",
+    "influxFieldFilters": "Field filters",
+    "influxMeasurementFilter": "Measurement filters"
+  }
+}

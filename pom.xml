@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>addon-influxdb</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.influxdb</groupId>
+      <artifactId>influxdb-client-java</artifactId>
+      <version>6.7.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.squareup.okio</groupId>
+          <artifactId>okio</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.reactivex.rxjava3</groupId>
+          <artifactId>rxjava</artifactId>
+        </exclusion>
+         <exclusion>
+           <artifactId>*</artifactId>
+           <groupId>javax.annotation</groupId>
+         </exclusion>
+        <exclusion>
+          <artifactId>*</artifactId>
+          <groupId>com.squareup.retrofit2</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>*</artifactId>
+          <groupId>com.squareup.okhttp3</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>commons-csv</artifactId>
+          <groupId>org.apache.commons</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gson</artifactId>
+          <groupId>com.google.code.gson</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+  <description>Influx DB bundle to store time-series variables to local/cloud databases</description>
+  <modelVersion>4.0.0</modelVersion>
+  <name>InfluxDB</name>
+  <packaging>jar</packaging>
+
+  <parent>
+    <artifactId>addon-parent</artifactId>
+    <groupId>org.touchhome</groupId>
+    <version>1.2.1</version>
+  </parent>
+
+  <version>1.0.0-SNAPSHOT</version>
+</project>
