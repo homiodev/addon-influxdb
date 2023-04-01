@@ -1,4 +1,4 @@
-package org.touchhome.bundle.influxdb.entity;
+package org.homio.bundle.influxdb.entity;
 
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.query.FluxRecord;
@@ -12,11 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.touchhome.bundle.api.model.OptionModel;
-import org.touchhome.bundle.api.ui.action.DynamicOptionLoader;
-import org.touchhome.bundle.api.ui.field.UIField;
-import org.touchhome.bundle.api.ui.field.selection.UIFieldSelection;
-import org.touchhome.bundle.api.ui.field.selection.dynamic.DynamicParameterFields;
+import org.homio.bundle.api.model.OptionModel;
+import org.homio.bundle.api.ui.action.DynamicOptionLoader;
+import org.homio.bundle.api.ui.field.UIField;
+import org.homio.bundle.api.ui.field.selection.UIFieldSelection;
+import org.homio.bundle.api.ui.field.selection.dynamic.DynamicParameterFields;
 
 @Getter
 @Setter

@@ -1,7 +1,7 @@
-package org.touchhome.bundle.influxdb.setting;
+package org.homio.bundle.influxdb.setting;
 
-import org.touchhome.bundle.api.EntityContext;
-import org.touchhome.bundle.api.setting.SettingPluginText;
+import org.homio.bundle.api.EntityContext;
+import org.homio.bundle.api.setting.SettingPluginText;
 
 public class InfluxDBPathSetting implements SettingPluginText {
 

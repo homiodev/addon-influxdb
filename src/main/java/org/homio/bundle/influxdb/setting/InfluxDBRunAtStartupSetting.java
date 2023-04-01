@@ -1,6 +1,6 @@
-package org.touchhome.bundle.influxdb.setting;
+package org.homio.bundle.influxdb.setting;
 
-import org.touchhome.bundle.api.setting.SettingPluginBoolean;
+import org.homio.bundle.api.setting.SettingPluginBoolean;
 
 public class InfluxDBRunAtStartupSetting implements SettingPluginBoolean {
 

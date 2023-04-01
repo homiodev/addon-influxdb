@@ -1,13 +1,13 @@
-package org.touchhome.bundle.influxdb;
+package org.homio.bundle.influxdb;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.homio.bundle.influxdb.setting.InfluxDBConfigureButtonSetting;
+import org.homio.bundle.influxdb.setting.InfluxDBDependencyExecutableInstaller;
 import org.springframework.stereotype.Component;
-import org.touchhome.bundle.api.BundleEntrypoint;
-import org.touchhome.bundle.api.EntityContext;
-import org.touchhome.bundle.influxdb.setting.InfluxDBConfigureButtonSetting;
-import org.touchhome.bundle.influxdb.setting.InfluxDBDependencyExecutableInstaller;
+import org.homio.bundle.api.BundleEntrypoint;
+import org.homio.bundle.api.EntityContext;
 
 @Log4j2
 @Component

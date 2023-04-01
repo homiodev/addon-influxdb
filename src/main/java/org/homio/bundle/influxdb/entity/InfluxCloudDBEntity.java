@@ -1,4 +1,4 @@
-package org.touchhome.bundle.influxdb.entity;
+package org.homio.bundle.influxdb.entity;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -21,26 +21,26 @@ import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.touchhome.bundle.api.EntityContext;
-import org.touchhome.bundle.api.entity.types.StorageEntity;
-import org.touchhome.bundle.api.entity.widget.PeriodRequest;
-import org.touchhome.bundle.api.entity.widget.ability.HasTimeValueSeries;
-import org.touchhome.bundle.api.exception.ProhibitedExecution;
-import org.touchhome.bundle.api.model.ActionResponseModel;
-import org.touchhome.bundle.api.model.HasEntityLog;
-import org.touchhome.bundle.api.service.EntityService;
-import org.touchhome.bundle.api.storage.SourceHistory;
-import org.touchhome.bundle.api.storage.SourceHistoryItem;
-import org.touchhome.bundle.api.ui.UISidebarChildren;
-import org.touchhome.bundle.api.ui.field.UIField;
-import org.touchhome.bundle.api.ui.field.UIFieldType;
-import org.touchhome.bundle.api.ui.field.action.HasDynamicContextMenuActions;
-import org.touchhome.bundle.api.ui.field.action.UIContextMenuAction;
-import org.touchhome.bundle.api.ui.field.action.v1.UIInputBuilder;
-import org.touchhome.bundle.api.ui.field.selection.dynamic.DynamicParameterFields;
-import org.touchhome.bundle.api.ui.field.selection.dynamic.SelectionWithDynamicParameterFields;
-import org.touchhome.bundle.api.util.SecureString;
-import org.touchhome.bundle.api.util.Lang;
+import org.homio.bundle.api.EntityContext;
+import org.homio.bundle.api.entity.types.StorageEntity;
+import org.homio.bundle.api.entity.widget.PeriodRequest;
+import org.homio.bundle.api.entity.widget.ability.HasTimeValueSeries;
+import org.homio.bundle.api.exception.ProhibitedExecution;
+import org.homio.bundle.api.model.ActionResponseModel;
+import org.homio.bundle.api.model.HasEntityLog;
+import org.homio.bundle.api.service.EntityService;
+import org.homio.bundle.api.storage.SourceHistory;
+import org.homio.bundle.api.storage.SourceHistoryItem;
+import org.homio.bundle.api.ui.UISidebarChildren;
+import org.homio.bundle.api.ui.field.UIField;
+import org.homio.bundle.api.ui.field.UIFieldType;
+import org.homio.bundle.api.ui.field.action.HasDynamicContextMenuActions;
+import org.homio.bundle.api.ui.field.action.UIContextMenuAction;
+import org.homio.bundle.api.ui.field.action.v1.UIInputBuilder;
+import org.homio.bundle.api.ui.field.selection.dynamic.DynamicParameterFields;
+import org.homio.bundle.api.ui.field.selection.dynamic.SelectionWithDynamicParameterFields;
+import org.homio.bundle.api.util.SecureString;
+import org.homio.bundle.api.util.Lang;
 
 @Getter
 @Setter
@@ -98,7 +98,7 @@ public class InfluxCloudDBEntity extends StorageEntity<InfluxCloudDBEntity>
 
   @UIField(order = 40)
   public String getBucket() {
-    return getJsonData("bucket", "touchHomeBucket");
+    return getJsonData("bucket", "homioBucket");
   }
 
   public InfluxCloudDBEntity setBucket(String value) {
@@ -244,7 +244,7 @@ public class InfluxCloudDBEntity extends StorageEntity<InfluxCloudDBEntity>
   @Override
   public void logBuilder(EntityLogBuilder entityLogBuilder) {
     entityLogBuilder.addTopic("com.influxdb");
-    entityLogBuilder.addTopic("org.touchhome.bundle.influxdb");
+    entityLogBuilder.addTopic("org.homio.bundle.influxdb");
   }
 
   /**

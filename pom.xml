@@ -6,7 +6,7 @@
     <dependency>
       <groupId>com.influxdb</groupId>
       <artifactId>influxdb-client-java</artifactId>
-      <version>6.7.0</version>
+      <version>6.8.0</version>
       <exclusions>
         <exclusion>
           <groupId>com.squareup.okio</groupId>
@@ -43,15 +43,15 @@
   <modelVersion>4.0.0</modelVersion>
   <name>InfluxDB</name>
   <packaging>jar</packaging>
-  
+
   <properties>
     <category>Storage</category>
   </properties>
 
   <parent>
     <artifactId>addon-parent</artifactId>
-    <groupId>org.touchhome</groupId>
-    <version>1.2.1</version>
+    <groupId>org.homio</groupId>
+    <version>1.2.3</version>
   </parent>
 
   <version>1.0.1-SNAPSHOT</version>

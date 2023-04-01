@@ -1,10 +1,10 @@
-package org.touchhome.bundle.influxdb.entity;
+package org.homio.bundle.influxdb.entity;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import java.util.Objects;
 import lombok.Getter;
-import org.touchhome.bundle.api.service.EntityService;
+import org.homio.bundle.api.service.EntityService;
 
 @Getter
 public class InfluxCloudService implements EntityService.ServiceInstance<InfluxCloudDBEntity> {

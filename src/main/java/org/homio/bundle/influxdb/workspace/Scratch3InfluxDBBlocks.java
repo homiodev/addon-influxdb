@@ -1,4 +1,4 @@
-package org.touchhome.bundle.influxdb.workspace;
+package org.homio.bundle.influxdb.workspace;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteApi;
@@ -9,13 +9,13 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-import org.touchhome.bundle.api.EntityContext;
-import org.touchhome.bundle.api.workspace.WorkspaceBlock;
-import org.touchhome.bundle.api.workspace.scratch.MenuBlock;
-import org.touchhome.bundle.api.workspace.scratch.Scratch3Block;
-import org.touchhome.bundle.api.workspace.scratch.Scratch3ExtensionBlocks;
-import org.touchhome.bundle.influxdb.InfluxDBEntrypoint;
-import org.touchhome.bundle.influxdb.entity.InfluxCloudDBEntity;
+import org.homio.bundle.api.EntityContext;
+import org.homio.bundle.api.workspace.WorkspaceBlock;
+import org.homio.bundle.api.workspace.scratch.MenuBlock;
+import org.homio.bundle.api.workspace.scratch.Scratch3Block;
+import org.homio.bundle.api.workspace.scratch.Scratch3ExtensionBlocks;
+import org.homio.bundle.influxdb.InfluxDBEntrypoint;
+import org.homio.bundle.influxdb.entity.InfluxCloudDBEntity;
 
 @Log4j2
 @Getter

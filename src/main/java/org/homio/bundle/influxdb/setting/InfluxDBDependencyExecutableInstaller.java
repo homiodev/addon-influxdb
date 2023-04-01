@@ -1,4 +1,4 @@
-package org.touchhome.bundle.influxdb.setting;
+package org.homio.bundle.influxdb.setting;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,13 +7,13 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.SystemUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.touchhome.bundle.api.EntityContext;
-import org.touchhome.bundle.api.entity.dependency.DependencyExecutableInstaller;
-import org.touchhome.bundle.api.setting.SettingPluginButton;
-import org.touchhome.bundle.api.setting.SettingPluginText;
-import org.touchhome.bundle.api.util.TouchHomeUtils;
-import org.touchhome.bundle.api.ui.field.ProgressBar;
-import org.touchhome.bundle.hquery.hardware.other.MachineHardwareRepository;
+import org.homio.bundle.api.EntityContext;
+import org.homio.bundle.api.entity.dependency.DependencyExecutableInstaller;
+import org.homio.bundle.api.setting.SettingPluginButton;
+import org.homio.bundle.api.setting.SettingPluginText;
+import org.homio.bundle.api.util.CommonUtils;
+import org.homio.bundle.api.ui.field.ProgressBar;
+import org.homio.bundle.hquery.hardware.other.MachineHardwareRepository;
 
 @Log4j2
 @Component
@@ -38,9 +38,9 @@ public class InfluxDBDependencyExecutableInstaller extends DependencyExecutableI
       return null;
     } else {
       Path targetFolder;
-      if (Files.isRegularFile(TouchHomeUtils.getInstallPath().resolve("influxdb").resolve("influxdb2-2.0.6-windows-amd64")
+      if (Files.isRegularFile(CommonUtils.getInstallPath().resolve("influxdb").resolve("influxdb2-2.0.6-windows-amd64")
           .resolve("influx.exe"))) {
-        targetFolder = TouchHomeUtils.getInstallPath().resolve("influxdb");
+        targetFolder = CommonUtils.getInstallPath().resolve("influxdb");
       } else {
         targetFolder = downloadAndExtract("https://dl.influxdata.com/influxdb/releases/influxdb2-2.0.6-windows-amd64.zip",
             "influxdb.zip", progressBar, log);

@@ -1,14 +1,14 @@
-package org.touchhome.bundle.influxdb.setting;
+package org.homio.bundle.influxdb.setting;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.SystemUtils;
-import org.touchhome.bundle.api.EntityContext;
-import org.touchhome.bundle.api.EntityContextUI;
-import org.touchhome.bundle.api.setting.SettingPluginButton;
-import org.touchhome.bundle.api.ui.field.action.ActionInputParameter;
-import org.touchhome.bundle.hquery.hardware.other.MachineHardwareRepository;
-import org.touchhome.bundle.influxdb.entity.InfluxCloudDBEntity;
+import org.homio.bundle.api.EntityContext;
+import org.homio.bundle.api.EntityContextUI;
+import org.homio.bundle.api.setting.SettingPluginButton;
+import org.homio.bundle.api.ui.field.action.ActionInputParameter;
+import org.homio.bundle.hquery.hardware.other.MachineHardwareRepository;
+import org.homio.bundle.influxdb.entity.InfluxCloudDBEntity;
 
 public class InfluxDBConfigureButtonSetting implements SettingPluginButton {
 
