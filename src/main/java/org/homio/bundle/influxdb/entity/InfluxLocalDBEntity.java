@@ -1,11 +1,10 @@
 package org.homio.bundle.influxdb.entity;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +19,9 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.homio.bundle.api.EntityContext;
+import org.homio.bundle.api.EntityContextHardware;
 import org.homio.bundle.api.entity.types.StorageEntity;
 import org.homio.bundle.api.entity.widget.PeriodRequest;
 import org.homio.bundle.api.entity.widget.ability.HasTimeValueSeries;
@@ -32,13 +33,14 @@ import org.homio.bundle.api.storage.SourceHistory;
 import org.homio.bundle.api.storage.SourceHistoryItem;
 import org.homio.bundle.api.ui.UISidebarChildren;
 import org.homio.bundle.api.ui.field.UIField;
-import org.homio.bundle.api.ui.field.UIFieldType;
+import org.homio.bundle.api.ui.field.UIFieldGroup;
 import org.homio.bundle.api.ui.field.action.HasDynamicContextMenuActions;
 import org.homio.bundle.api.ui.field.action.UIContextMenuAction;
 import org.homio.bundle.api.ui.field.action.v1.UIInputBuilder;
 import org.homio.bundle.api.ui.field.selection.dynamic.DynamicParameterFields;
 import org.homio.bundle.api.ui.field.selection.dynamic.SelectionWithDynamicParameterFields;
-import org.homio.bundle.api.util.Lang;
+import org.homio.bundle.api.util.CommonUtils;
+import org.homio.bundle.api.util.Curl;
 import org.homio.bundle.api.util.SecureString;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -49,87 +51,87 @@ import org.json.JSONObject;
 @Setter
 @Entity
 @Accessors(chain = true)
-@UISidebarChildren(icon = "fab fa-cloudflare", color = "#90C211")
-public class InfluxCloudDBEntity extends StorageEntity<InfluxCloudDBEntity>
+@UISidebarChildren(icon = "fab fa-usps", color = "#90C211")
+public class InfluxLocalDBEntity extends StorageEntity<InfluxLocalDBEntity>
     implements HasDynamicContextMenuActions, HasEntityLog,
-    HasTimeValueSeries, SelectionWithDynamicParameterFields, EntityService<InfluxCloudService, InfluxCloudDBEntity> {
+    HasTimeValueSeries, SelectionWithDynamicParameterFields, EntityService<InfluxLocalService, InfluxLocalDBEntity> {
 
-  public static final String PREFIX = "influxclouddb_";
+  public static final String PREFIX = "influxlocaldb_";
 
-  @UIField(order = 1, hideInEdit = true, hideOnEmpty = true, fullWidth = true, bg = "#334842", type = UIFieldType.HTML)
-  public final String getDescription() {
-    return Lang.getServerMessage(getDescription(isRequireConfigure()));
+  @UIField(order = 1, required = true, inlineEditWhenEmpty = true)
+  @UIFieldGroup(value = "SECURITY", order = 10, borderColor = "#23ADAB")
+  public String getUser() {
+    return getJsonData("user");
   }
 
-  public boolean isRequireConfigure() {
-    return isEmpty(getToken()) || isEmpty(getUrl()) || isEmpty(getBucket());
-  }
-
-  public String getDescription(boolean require) {
-    return require ? "influxclouddb.require_description" : "influxclouddb.description";
-  }
-
-  @UIField(order = 30, required = true, inlineEditWhenEmpty = true)
-  public SecureString getToken() {
-    return getJsonSecure("token");
-  }
-
-  public InfluxCloudDBEntity setToken(String value) {
-    setJsonDataSecure("token", value);
+  public InfluxLocalDBEntity setUser(String value) {
+    setJsonData("user", value);
     return this;
   }
 
-  @UIField(order = 40)
+  @UIField(order = 2, required = true, inlineEditWhenEmpty = true)
+  @UIFieldGroup("SECURITY")
+  public SecureString getPassword() {
+    return getJsonSecure("pwd");
+  }
+
+  public InfluxLocalDBEntity setPassword(String value) {
+    setJsonDataSecure("pwd", value);
+    return this;
+  }
+
+  @UIField(order = 1, required = true)
+  @UIFieldGroup(value = "GENERAL", order = 4)
   public String getBucket() {
     return getJsonData("bucket", "homioBucket");
   }
 
-  public InfluxCloudDBEntity setBucket(String value) {
+  public InfluxLocalDBEntity setBucket(String value) {
     setJsonData("bucket", value);
     return this;
   }
 
-  @UIField(order = 40)
+
+  @UIField(order = 2, required = true)
+  @UIFieldGroup("GENERAL")
   public String getOrg() {
     return getJsonData("org", "primary");
   }
 
-  public InfluxCloudDBEntity setOrg(String value) {
+  public InfluxLocalDBEntity setOrg(String value) {
     setJsonData("org", value);
     return this;
   }
 
-  @UIField(order = 100, required = true, inlineEditWhenEmpty = true)
+  @UIField(order = 3, required = true, inlineEditWhenEmpty = true)
+  @UIFieldGroup("GENERAL")
   public String getUrl() {
-    return getJsonData("url", "https://eu-central-1-1.aws.cloud2.influxdata.com");
+    return getJsonData("url", "http://localhost:8086");
   }
 
-  public InfluxCloudDBEntity setUrl(String value) {
+  public InfluxLocalDBEntity setUrl(String value) {
     setJsonData("url", value);
     return this;
   }
 
   @Override
   public String getDefaultName() {
-    if (StringUtils.isEmpty(getBucket())) {
-      return "InfluxCloudDB";
-    }
-    return "InfluxCloudDB/" + getBucket();
+    return "InfluxLocalDB/" + getBucket();
   }
 
   @Override
-  public String getEntityPrefix() {
+  public @NotNull String getEntityPrefix() {
     return PREFIX;
   }
 
   @Override
-  public @NotNull Class<InfluxCloudService> getEntityServiceItemClass() {
-    return InfluxCloudService.class;
+  public @NotNull Class<InfluxLocalService> getEntityServiceItemClass() {
+    return InfluxLocalService.class;
   }
 
   @Override
-  public InfluxCloudService createService(@NotNull EntityContext entityContext) {
-    return new InfluxCloudService(this, entityContext);
+  public InfluxLocalService createService(@NotNull EntityContext entityContext) {
+    return new InfluxLocalService(this, entityContext);
   }
 
   @UIContextMenuAction("CHECK_DB_CONNECTION")
@@ -199,7 +201,7 @@ public class InfluxCloudDBEntity extends StorageEntity<InfluxCloudDBEntity>
     query = updateQueryWithFilter(request.getParameters(), query, "influxMeasurementFilter", "_measurement");
     query = updateQueryWithFilter(request.getParameters(), query, "influxFieldFilters", "_field");
 
-    InfluxDBClient influxDB = InfluxDBClientFactory.create(getUrl(), getToken().asString().toCharArray());
+    InfluxDBClient influxDB = InfluxDBClientFactory.create(getUrl(), getUser(), getPassword().asString().toCharArray());
     List<FluxTable> tables = influxDB.getQueryApi().query(query, getOrg());
 
     Map<TimeValueDatasetDescription, List<Object[]>> charts = new HashMap<>(tables.size());
@@ -216,6 +218,47 @@ public class InfluxCloudDBEntity extends StorageEntity<InfluxCloudDBEntity>
     }
     influxDB.close();
     return charts;
+  }
+
+  @UIContextMenuAction(value = "install_influxdb", icon = "fas fa-play")
+  public ActionResponseModel install(EntityContext entityContext) {
+    EntityContextHardware hardware = entityContext.hardware();
+    if (!isInfluxInstalled(hardware)) {
+      entityContext.bgp().runWithProgress("install-influxdb", false, progressBar -> {
+        if (SystemUtils.IS_OS_LINUX) {
+          hardware.installSoftware("gpg", 120);
+          hardware.execute(
+              "curl https://repos.influxdata.com/influxdata-archive.key | gpg --dearmor | sudo tee /usr/share/keyrings/influxdb-archive-keyring.gpg "
+                  + ">/dev/null");
+          hardware.execute("echo \"deb [signed-by=/usr/share/keyrings/influxdb-archive-keyring.gpg] https://repos.influxdata.com/debian $(lsb_release -cs) "
+              + "stable\" | sudo tee /etc/apt/sources.list.d/influxdb.list");
+          hardware.update()
+                  .installSoftware("influxdb", 600)
+                  .enableAndStartSystemCtl("influxdb");
+        } else {
+          Curl.downloadAndExtract("https://dl.influxdata.com/influxdb/releases/influxdb2-2.7.1-windows-amd64.zip",
+              "influxdb.zip", progressBar, log);
+        }
+      }, exception -> {
+        if (exception != null) {
+          entityContext.ui().sendErrorMessage("Error during install InfluxDb", exception);
+        } else {
+          entityContext.ui().sendSuccessMessage("InfluxDb installed successfully");
+        }
+      });
+      return ActionResponseModel.showInfo("Installing InfluxDb...");
+    } else {
+      return ActionResponseModel.showError("InfluxDb already installed");
+    }
+  }
+
+  private boolean isInfluxInstalled(EntityContextHardware hardware) {
+    if (SystemUtils.IS_OS_LINUX) {
+      return hardware.isSoftwareInstalled("influxdb");
+    } else {
+      return Files.isRegularFile(CommonUtils.getInstallPath().resolve("influxdb").resolve("influxdb2-2.7.1-windows-amd64")
+                                            .resolve("influx.exe"));
+    }
   }
 
   @Override
