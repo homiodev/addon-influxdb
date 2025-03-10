@@ -1,63 +1,51 @@
 package org.homio.bundle.influxdb.entity;
 
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import lombok.Getter;
-import org.homio.bundle.api.EntityContext;
-import org.homio.bundle.api.service.EntityService;
-import org.homio.bundle.api.ui.UI.Color;
+import org.homio.api.Context;
+import org.homio.api.model.Icon;
+import org.homio.api.service.EntityService;
+import org.homio.api.ui.UI;
+import org.jetbrains.annotations.Nullable;
+
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 @Getter
-public class InfluxLocalService implements EntityService.ServiceInstance<InfluxLocalDBEntity> {
+public class InfluxLocalService extends EntityService.ServiceInstance<InfluxLocalDBEntity> {
 
   private InfluxDBClient influxDBClient;
-  private final EntityContext entityContext;
-  private InfluxLocalDBEntity entity;
-  private long hashCode;
 
-  public InfluxLocalService(InfluxLocalDBEntity entity, EntityContext entityContext) {
-    this.entity = entity;
-    this.entityContext = entityContext;
-    this.influxDBClient = InfluxDBClientFactory.create(entity.getUrl(), entity.getUser(), entity.getPassword().asString().toCharArray());
+  public InfluxLocalService(InfluxLocalDBEntity entity, Context context) {
+    super(context, entity, true, "InfluxDB local", true);
   }
 
   @Override
-  public boolean entityUpdated(InfluxLocalDBEntity entity) {
-    long hashCode = entity.getJsonDataHashCode("url", "user", "pwd");
-    boolean reconfigure = this.hashCode != hashCode;
-    this.hashCode = hashCode;
-    this.entity = entity;
-    if (reconfigure) {
-      this.destroy();
-    }
+  protected void initialize() {
     this.influxDBClient = InfluxDBClientFactory.create(entity.getUrl(), entity.getUser(), entity.getPassword().asString().toCharArray());
-    updateNotificationBlock();
-    return reconfigure;
   }
 
-  private void updateNotificationBlock() {
-    entityContext.ui().addNotificationBlock("influxdb", "InfluxDB", "fab fa-usps", "#90C211", builder -> {
+  public void updateNotificationBlock() {
+    context.ui().notification().addBlock("influxdb", "InfluxDB", new Icon("fab fa-usps", "#90C211"), builder -> {
       builder.setStatus(getEntity().getStatus());
       if (!getEntity().getStatus().isOnline()) {
-        builder.addInfo(defaultIfEmpty(getEntity().getStatusMessage(), "Unknown error"),
-            Color.RED, "fas fa-exclamation", null);
+        var err = defaultIfEmpty(getEntity().getStatusMessage(), "Unknown error");
+        builder.addInfo(String.valueOf(err.hashCode()),
+          new Icon("fas fa-exclamation", UI.Color.RED), err);
       } else {
-        String version = entityContext.hardware().execute("influx -version");
+        String version = context.hardware().execute("influx -version");
         builder.setVersion(version);
       }
     });
   }
 
   @Override
-  public void destroy() {
+  public void destroy(boolean forRestart, @Nullable Exception ex) {
     this.influxDBClient.close();
   }
 
   @Override
-  public boolean testService() {
+  public void testService() {
     this.influxDBClient.getUsersApi().findUsers();
-    return true;
   }
 }

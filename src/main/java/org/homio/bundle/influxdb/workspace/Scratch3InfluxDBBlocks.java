@@ -3,19 +3,20 @@ package org.homio.bundle.influxdb.workspace;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.domain.WritePrecision;
-import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Component;
-import org.homio.bundle.api.EntityContext;
-import org.homio.bundle.api.workspace.WorkspaceBlock;
-import org.homio.bundle.api.workspace.scratch.MenuBlock;
-import org.homio.bundle.api.workspace.scratch.Scratch3Block;
-import org.homio.bundle.api.workspace.scratch.Scratch3ExtensionBlocks;
+import org.homio.api.Context;
+import org.homio.api.workspace.WorkspaceBlock;
+import org.homio.api.workspace.scratch.MenuBlock;
+import org.homio.api.workspace.scratch.Scratch3Block;
+import org.homio.api.workspace.scratch.Scratch3ExtensionBlocks;
 import org.homio.bundle.influxdb.InfluxDBEntrypoint;
 import org.homio.bundle.influxdb.entity.InfluxCloudDBEntity;
+import org.springframework.stereotype.Component;
+
+import java.time.Instant;
 
 @Log4j2
 @Getter
@@ -29,9 +30,9 @@ public class Scratch3InfluxDBBlocks extends Scratch3ExtensionBlocks {
   private final Scratch3Block appendFieldCommand;
   private final Scratch3Block appendTagCommand;
 
-  public Scratch3InfluxDBBlocks(EntityContext entityContext, InfluxDBEntrypoint influxDBEntrypoint) {
-    super("#007190", entityContext, influxDBEntrypoint, null);
-    setParent("storage");
+  public Scratch3InfluxDBBlocks(Context context, InfluxDBEntrypoint influxDBEntrypoint) {
+    super("#007190", context, influxDBEntrypoint, null);
+    setParent(ScratchParent.storage);
 
     // Menu
     this.influxDbMenu = menuServerItems("influxDbMenu", InfluxCloudDBEntity.class, "Select Influx");
@@ -39,7 +40,7 @@ public class Scratch3InfluxDBBlocks extends Scratch3ExtensionBlocks {
 
     // commands
     this.writeCommand =
-        blockCommand(10, "write", "Write [TYPE] [KEY]/[VALUE] as [MEASUREMENT] to [DB]", this::saveCommand);
+      blockCommand(10, "write", "Write [TYPE] [KEY]/[VALUE] as [MEASUREMENT] to [DB]", this::saveCommand);
     this.writeCommand.addArgument("DB", this.influxDbMenu);
     this.writeCommand.addArgument("MEASUREMENT", "sample");
     this.writeCommand.addArgument("KEY", "key");
@@ -47,13 +48,13 @@ public class Scratch3InfluxDBBlocks extends Scratch3ExtensionBlocks {
     this.writeCommand.addArgument("TYPE", this.typeMenu);
 
     this.appendFieldCommand = blockCommand(20, InfluxApplyHandler.update_add_field.name(),
-        "Field [TYPE] [KEY]/[VALUE]", this::skipExpression);
+      "Field [TYPE] [KEY]/[VALUE]", this::skipExpression);
     this.appendFieldCommand.addArgument("KEY", "key");
     this.appendFieldCommand.addArgument(VALUE, 1.0);
     this.appendFieldCommand.addArgument("TYPE", this.typeMenu);
 
     this.appendTagCommand = blockCommand(20, InfluxApplyHandler.update_add_tag.name(),
-        "Tag [KEY]/[VALUE]", this::skipExpression);
+      "Tag [KEY]/[VALUE]", this::skipExpression);
     this.appendTagCommand.addArgument("KEY", "key");
     this.appendTagCommand.addArgument(VALUE, "value");
 
@@ -69,9 +70,9 @@ public class Scratch3InfluxDBBlocks extends Scratch3ExtensionBlocks {
   }
 
   private void saveToCloudDb(WorkspaceBlock workspaceBlock, String measurement, String name, Float value,
-      InfluxCloudDBEntity influxCloudDBEntity) {
+                             InfluxCloudDBEntity influxCloudDBEntity) {
     com.influxdb.client.write.Point point =
-        com.influxdb.client.write.Point.measurement(measurement).time(Instant.now(), WritePrecision.NS);
+      com.influxdb.client.write.Point.measurement(measurement).time(Instant.now(), WritePrecision.NS);
     point.addField(name, value);
 
     applyParentBlocks(new ItemBuilder() {
@@ -117,13 +118,12 @@ public class Scratch3InfluxDBBlocks extends Scratch3ExtensionBlocks {
 
   @AllArgsConstructor
   private enum TypeEnum {
-    Int((key, value, builder) -> {
-      builder.addField(key, value.intValue());
-    }), Float((key, value, builder) -> {
-      builder.addField(key, value);
-    }), Bool((key, value, builder) -> {
-      builder.addField(key, value >= 1.0);
-    });
+    Int((key, value, builder) ->
+      builder.addField(key, value.intValue())),
+    Float((key, value, builder) ->
+      builder.addField(key, value)),
+    Bool((key, value, builder) ->
+      builder.addField(key, value >= 1.0));
 
     private final TypeAppendHandler applyFn;
 
@@ -139,9 +139,8 @@ public class Scratch3InfluxDBBlocks extends Scratch3ExtensionBlocks {
       TypeEnum menuValue = workspaceBlock.getMenuValue("TYPE", scratch.typeMenu);
       menuValue.applyFn.handle(workspaceBlock.getInputString("KEY"), workspaceBlock.getInputFloat(VALUE), builder);
     }),
-    update_add_tag((workspaceBlock, builder, scratch) -> {
-      builder.addTag(workspaceBlock.getInputString("KEY"), workspaceBlock.getInputString(VALUE));
-    });
+    update_add_tag((workspaceBlock, builder, scratch) ->
+      builder.addTag(workspaceBlock.getInputString("KEY"), workspaceBlock.getInputString(VALUE)));
 
     private final InfluxAppendHandler applyFn;
 
