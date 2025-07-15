@@ -14,8 +14,8 @@ import org.apache.commons.lang3.SystemUtils;
 import org.hibernate.service.spi.ServiceException;
 import org.homio.api.Context;
 import org.homio.api.ContextHardware;
+import org.homio.api.entity.device.DeviceBaseEntity;
 import org.homio.api.entity.log.HasEntityLog;
-import org.homio.api.entity.types.StorageEntity;
 import org.homio.api.entity.widget.PeriodRequest;
 import org.homio.api.entity.widget.ability.HasTimeValueSeries;
 import org.homio.api.fs.archive.ArchiveUtil;
@@ -24,7 +24,6 @@ import org.homio.api.service.EntityService;
 import org.homio.api.state.State;
 import org.homio.api.storage.SourceHistory;
 import org.homio.api.storage.SourceHistoryItem;
-import org.homio.api.ui.UISidebarChildren;
 import org.homio.api.ui.field.UIField;
 import org.homio.api.ui.field.UIFieldGroup;
 import org.homio.api.ui.field.action.HasDynamicContextMenuActions;
@@ -32,6 +31,7 @@ import org.homio.api.ui.field.action.UIContextMenuAction;
 import org.homio.api.ui.field.action.v1.UIInputBuilder;
 import org.homio.api.ui.field.selection.dynamic.DynamicParameterFields;
 import org.homio.api.ui.field.selection.dynamic.SelectionWithDynamicParameterFields;
+import org.homio.api.ui.route.UIRouteStorage;
 import org.homio.api.util.CommonUtils;
 import org.homio.api.util.SecureString;
 import org.jetbrains.annotations.NotNull;
@@ -55,8 +55,8 @@ import java.util.stream.Collectors;
 @Setter
 @Entity
 @Accessors(chain = true)
-@UISidebarChildren(icon = "fab fa-usps", color = "#90C211")
-public class InfluxLocalDBEntity extends StorageEntity implements
+@UIRouteStorage(icon = "fab fa-usps", color = "#90C211")
+public class InfluxLocalDBEntity extends DeviceBaseEntity implements
   HasDynamicContextMenuActions,
   HasEntityLog,
   HasTimeValueSeries,
@@ -130,11 +130,6 @@ public class InfluxLocalDBEntity extends StorageEntity implements
   }
 
   @Override
-  public @NotNull Class<InfluxLocalService> getEntityServiceItemClass() {
-    return InfluxLocalService.class;
-  }
-
-  @Override
   public InfluxLocalService createService(@NotNull Context context) {
     return new InfluxLocalService(this, context);
   }
@@ -196,7 +191,7 @@ public class InfluxLocalDBEntity extends StorageEntity implements
     query = updateQueryWithFilter(request.getParameters(), query, "influxFieldFilters", "_field");
 
     InfluxDBClient influxDB = InfluxDBClientFactory.create(getUrl(), getUser(), getPassword().asString().toCharArray());
-    List<FluxTable> tables = influxDB.getQueryApi().query(query, getOrg());
+    var tables = influxDB.getQueryApi().query(query, getOrg());
 
     Map<TimeValueDatasetDescription, List<Object[]>> charts = new HashMap<>(tables.size());
     for (FluxTable fluxTable : tables) {
